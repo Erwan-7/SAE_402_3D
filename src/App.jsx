@@ -4,6 +4,7 @@ import { useTexture } from "@react-three/drei";
 import Landing from "./pages/Landing";
 import Home from "./pages/Home";
 import Egypt from "./pages/Egypt";
+import MiniSandTransition from "./components/MiniSandTransition";
 import "./index.css";
 
 import egyptImg from "./assets/egypt.jpg";
@@ -17,11 +18,11 @@ function AnimatedRoutes() {
   const location = useLocation();
   
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Landing />} />
-        <Route path="/map" element={<Home />} />
-        <Route path="/egypt" element={<Egypt />} />
+        <Route path="/" element={<MiniSandTransition><Landing /></MiniSandTransition>} />
+        <Route path="/map" element={<MiniSandTransition><Home /></MiniSandTransition>} />
+        <Route path="/egypt" element={<MiniSandTransition><Egypt /></MiniSandTransition>} />
       </Routes>
     </AnimatePresence>
   );
