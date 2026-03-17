@@ -60,18 +60,19 @@ export default function Egypt() {
         }}>
           <img src={logo} alt="Notre Logo" className="logo-main" style={{ filter: logoFilter, transition: 'filter 0.3s ease' }} />
         </Link>
-        <h1 style={{ 
+        <h1 className="header-title" style={{ 
           margin: 0, 
           zIndex: 1, 
           position: 'relative',
           fontSize: 'clamp(0.8rem, 4.5vw, 1.5rem)',
-          textAlign: 'right',
-          width: '100%'
+          textAlign: window.innerWidth <= 768 ? 'center' : 'right',
+          width: '100%',
+          paddingRight: window.innerWidth <= 768 ? '0' : '2rem'
         }}>LE SEIGNEUR DE VIE</h1>
       </header>
       
       <main style={{ 
-        marginTop: '80px', // Header height
+        marginTop: 'clamp(70px, 12vh, 85px)',
         position: 'relative', 
         overflowY: 'auto', 
         backgroundColor: 'var(--color-white)', 
@@ -80,18 +81,12 @@ export default function Egypt() {
       }}>
         <MapMotifs />
 
-        {/* Navigation Buttons Row - Now scrolls with content */}
-        <div style={{ 
+        {/* Navigation Buttons Row - Uses nav-row class for responsive padding */}
+        <div className="nav-row" style={{ 
           position: 'absolute', 
-          top: '40px', // Space below the fixed header
+          top: '40px', 
           left: 0, 
-          right: 0, 
-          height: '40px', 
           zIndex: 101, 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          padding: '0 4rem', 
           pointerEvents: 'none' 
         }}>
           <Link to="/map" className="back-link" style={{ 
@@ -134,9 +129,9 @@ export default function Egypt() {
           fontFamily: '"Times New Roman", Times, Georgia, serif'
         }}>
           <h1 style={{ 
-            fontSize: 'clamp(2rem, 6vw, 3.8rem)', 
+            fontSize: 'clamp(1.8rem, 6vw, 3.8rem)', 
             color: 'var(--color-gold)', 
-            marginBottom: '4rem',
+            marginBottom: 'clamp(2rem, 8vh, 4rem)',
             lineHeight: '1.2',
             textAlign: 'center',
             textShadow: isDarkMode ? '0 0 20px rgba(212, 175, 55, 0.2)' : 'none',
@@ -144,15 +139,15 @@ export default function Egypt() {
             flexDirection: 'column',
             alignItems: 'center'
           }}>
-            <span style={{ whiteSpace: 'nowrap' }}>L'Éternité Sculptée :</span>
-            <span style={{ whiteSpace: 'nowrap' }}>Le Mystère des Sarcophages Égyptiens</span>
+            <span>L'Éternité Sculptée :</span>
+            <span>Le Mystère des Sarcophages Égyptiens</span>
           </h1>
 
-          <div style={{ display: 'flex', gap: '3rem', marginBottom: '4rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-            <p style={{ flex: '2', minWidth: '350px', fontSize: '1.4rem', lineHeight: '1.8', fontStyle: 'italic', opacity: 0.9, borderLeft: '5px solid var(--color-gold)', paddingLeft: '2rem' }}>
+          <div className="responsive-flex">
+            <p style={{ flex: '2', minWidth: 'min(350px, 100%)', fontSize: 'clamp(1.1rem, 3vw, 1.4rem)', lineHeight: '1.8', fontStyle: 'italic', opacity: 0.9, borderLeft: '5px solid var(--color-gold)', paddingLeft: '2rem' }}>
               Bien plus qu’un simple réceptacle funéraire, le sarcophage égyptien de l’Antiquité représente une véritable forme culturelle dont la sophistication technique défie les millénaires. Objet de passage entre le monde des vivants et l’au-delà, cette demeure d’éternel témoigne d’un savoir-faire artisanal exceptionnel, mêlant ingénierie spirituelle et précision matérielle.
             </p>
-            <img src={art1} alt="Artefact égyptien" style={{ flex: '1', minWidth: '250px', height: 'auto', objectFit: 'cover', borderRadius: '15px', boxShadow: '0 15px 40px rgba(0,0,0,0.3)', border: '1.5px solid var(--color-gold)' }} />
+            <img src={art1} alt="Artefact égyptien" loading="lazy" decoding="async" style={{ flex: '1', minWidth: 'min(250px, 100%)', height: 'auto', maxWidth: '100%', objectFit: 'cover', borderRadius: '15px', boxShadow: '0 15px 40px rgba(0,0,0,0.3)', border: '1.5px solid var(--color-gold)' }} />
           </div>
 
           {/* 3D Frame - Reduced Height */}
@@ -173,16 +168,20 @@ export default function Egypt() {
             <div style={{ position: 'absolute', bottom: '15px', left: '15px', color: 'var(--color-gold)', fontSize: '2rem', zIndex: 2 }}>𓆗</div>
             <div style={{ position: 'absolute', bottom: '15px', right: '15px', color: 'var(--color-gold)', fontSize: '2rem', zIndex: 2 }}>𓆗</div>
 
-             <Canvas shadows camera={{ position: [0, 0, 5], fov: 35 }}>
+             <Canvas 
+                dpr={[1, 1.5]} 
+                gl={{ powerPreference: "high-performance", antialias: true }} 
+                camera={{ position: [0, 0, 5], fov: 35 }}
+              >
                 <Suspense fallback={null}>
-                  <Stage environment="city" intensity={0.65}>
+                  <Stage environment="city" intensity={0.4} shadows={false}>
                     <Model3D />
                   </Stage>
                 </Suspense>
                 <OrbitControls autoRotate autoRotateSpeed={0.8} makeDefault enableZoom={true} />
               </Canvas>
               
-              <div style={{ 
+              <div className="hidden-mobile" style={{ 
                 position: 'absolute', 
                 top: '50%', 
                 left: '2.5rem', 
@@ -198,22 +197,22 @@ export default function Egypt() {
               </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '4rem', marginBottom: '4rem', flexWrap: 'wrap-reverse' }}>
-            <img src={art2} alt="Papyrus égyptien" style={{ width: '350px', height: 'auto', objectFit: 'cover', borderRadius: '8px', boxShadow: '0 15px 35px rgba(0,0,0,0.25)', transform: 'rotate(-1.5deg)' }} />
-            <p style={{ flex: '1', minWidth: '350px', fontSize: '1.3rem', lineHeight: '2' }}>
+          <div className="responsive-flex" style={{ flexWrap: 'wrap-reverse' }}>
+            <img src={art2} alt="Papyrus égyptien" loading="lazy" decoding="async" style={{ width: 'min(350px, 100%)', height: 'auto', maxWidth: '100%', objectFit: 'cover', borderRadius: '8px', boxShadow: '0 15px 35px rgba(0,0,0,0.25)', transform: 'rotate(-1.5deg)' }} />
+            <p style={{ flex: '1', minWidth: 'min(350px, 100%)', fontSize: 'clamp(1rem, 2.5vw, 1.3rem)', lineHeight: '2' }}>
               En fonction du statut social du défunt, le sarcophage pouvait être fabriqué en utilisant du bois précieux, surtout le cèdre du Liban, et de la pierre massive dans laquelle on retrouve du basalte, du granit rose et du calcaire. Pour les modèles anthropoïdes, les ouvriers donnaient un aspect approximatif avant de sculpter en habillant la silhouette humaine. Ensuite, la surface était enduite avec du sable fin puis, grâce aux pigments naturels comme le bleu de lapis-lazuli, le jaune d’or et le vert de malachite, souvent fixés par de la cire d'abeille ou de la résine pour garantir leur éclat éternel.
             </p>
           </div>
 
           <div style={{ 
-            padding: '4rem', 
+            padding: 'clamp(1.5rem, 5vw, 4rem)', 
             backgroundColor: isDarkMode ? 'rgba(212, 175, 55, 0.08)' : 'rgba(200, 160, 88, 0.08)', 
             borderRadius: '25px', 
             border: '2px solid var(--color-gold)',
             marginBottom: '4rem',
             boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
           }}>
-            <p style={{ fontSize: '1.3rem', lineHeight: '2', margin: 0, textAlign: 'justify' }}>
+            <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.3rem)', lineHeight: '2', margin: 0, textAlign: 'justify' }}>
               L’élément qui donne à l’objet son caractère fascinant, c’est son organisation narrative. Chaque centimètre carré est saturé de hiéroglyphes et de dieux gardiens, Isis et Nephtys, gravés au ciseau de bronze. Le sarcophage n’est pas une boîte, mais un instrument d’une machine à remonter le temps, un ensemble d’art pur où la dureté de la pierre se marie avec la fragilité de l’espoir humain face à la mort. C’est au fond, le premier chef-d’œuvre de design dans l’histoire.
             </p>
           </div>

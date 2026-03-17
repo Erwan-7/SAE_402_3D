@@ -88,7 +88,7 @@ header h1 {
 
 @media (max-width: 768px) {
   .logo-main {
-    height: 70px;
+    height: 55px;
   }
 }
 
@@ -346,7 +346,6 @@ a {
 
   .egypt-page {
     flex-direction: column-reverse;
-    /* Put model on top or keep text first? Usually text first regarding semantics, but visually maybe model first? Let's keep column-reverse to have model on top visually or just column. */
     height: auto;
     min-height: 100vh;
   }
@@ -354,18 +353,67 @@ a {
   .content-section {
     padding: 2rem;
     order: 2;
-    /* Text below */
   }
 
   .model-section {
     height: 50vh;
-    /* Half screen for model */
     order: 1;
-    /* Model on top */
   }
 
   .map-container {
     width: 100%;
     padding: 0 1rem;
+  }
+}
+
+/* New responsive utilities for Egypt page */
+.nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 4rem;
+  width: 100%;
+}
+
+.responsive-flex {
+  display: flex;
+  gap: 3rem;
+  margin-bottom: 4rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .nav-row {
+    padding: 0 1.5rem !important;
+  }
+
+  .responsive-flex {
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .article-wrapper {
+    padding-top: 6rem !important;
+  }
+}
+
+.hidden-mobile {
+  display: inline;
+}
+
+@media (max-width: 600px) {
+  .hidden-mobile {
+    display: none;
+  }
+}
+
+.only-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .only-mobile {
+    display: block;
   }
 }

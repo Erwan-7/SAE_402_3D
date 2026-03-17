@@ -92,7 +92,7 @@ export default function Landing() {
           maxWidth: '1200px',
           marginTop: 'clamp(-5vh, -2vh, 0vh)'
         }}>
-          <img src={logo} alt="Logo" style={{ 
+          <img src={logo} alt="Logo" decoding="async" style={{ 
               height: 'min(50vh, 400px)', 
               maxWidth: '85vw', 
               objectFit: 'contain', 

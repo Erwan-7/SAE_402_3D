@@ -62,7 +62,7 @@ export default function Home() {
           transform: 'translateY(-50%)', 
           left: 'clamp(1rem, 5vw, 4rem)' 
         }}>
-          <img src={logo} alt="Notre Logo" className="logo-main" style={{ filter: logoFilter, transition: 'filter 0.3s ease' }} />
+          <img src={logo} alt="Notre Logo" decoding="async" className="logo-main" style={{ filter: logoFilter, transition: 'filter 0.3s ease' }} />
         </Link>
         <h1 style={{ 
           margin: 0, 

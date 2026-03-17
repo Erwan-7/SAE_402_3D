@@ -201,7 +201,17 @@ export default function WorldMap3D() {
             height: "100%",
             background: "transparent"
         }}>
-            <Canvas shadows dpr={[1, 2]} camera={{ position: [camX, camY, camZ], fov }}>
+            <Canvas 
+                dpr={[1, 1.5]} // Optimized DPR for performance/quality balance
+                gl={{ 
+                    powerPreference: "high-performance",
+                    alpha: true,
+                    antialias: true,
+                    stencil: false,
+                    depth: true
+                }}
+                camera={{ position: [camX, camY, camZ], fov }}
+            >
 
                 {/* Lighting setup: high ambient light removes the dark shadow side of the globe */}
                 <ambientLight intensity={1.8} />

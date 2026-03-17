@@ -5,7 +5,7 @@ const AmbientGrain = React.memo(({ index }) => {
   const data = useMemo(() => {
     const colors = ['#C8A058', '#d2b48c', '#c2b280', '#8b7355', '#f5deb3'];
     const color = colors[index % colors.length];
-    const size = Math.random() * 2.5 + 1.0;
+    const size = Math.random() * 2.5 + 1.2;
     const startX = Math.random() * 100;
     const startY = Math.random() * 100;
     const moveX = (Math.random() - 0.5) * 30;
@@ -17,19 +17,7 @@ const AmbientGrain = React.memo(({ index }) => {
   }, [index]);
 
   return (
-    <motion.div
-      initial={{ x: `${data.startX}vw`, y: `${data.startY}vh`, opacity: 0 }}
-      animate={{ 
-        x: `${data.startX + data.moveX}vw`,
-        y: `${data.startY + data.moveY}vh`,
-        opacity: [0, 0.6, 0] 
-      }}
-      transition={{ 
-        duration: data.duration, 
-        delay: data.delay, 
-        repeat: Infinity, 
-        ease: "linear" 
-      }}
+    <div
       style={{
         position: 'absolute',
         width: `${data.size}px`,
@@ -38,8 +26,13 @@ const AmbientGrain = React.memo(({ index }) => {
         borderRadius: '50%',
         zIndex: 1,
         pointerEvents: 'none',
-        willChange: 'transform, opacity',
-        backfaceVisibility: 'hidden'
+        left: `${data.startX}vw`,
+        top: `${data.startY}vh`,
+        opacity: 0,
+        animation: `ambientDrift ${data.duration}s linear ${data.delay}s infinite`,
+        '--move-x': `${data.moveX}vw`,
+        '--move-y': `${data.moveY}vh`,
+        willChange: 'transform, opacity'
       }}
     />
   );
@@ -51,29 +44,17 @@ const BurstGrain = React.memo(({ index }) => {
     const color = colors[index % colors.length];
     const size = Math.random() * 3.5 + 1.2;
     const angle = Math.random() * Math.PI * 2;
-    const velocity = 200 + Math.random() * 450;
+    const velocity = 150 + Math.random() * 400;
     const endX = Math.cos(angle) * velocity;
     const endY = Math.sin(angle) * velocity;
-    const duration = 2.5 + Math.random() * 1.5;
-    const delay = 2.0 + Math.random() * 1.0;
+    const duration = 2.0 + Math.random() * 1.5;
+    const delay = 2.0 + Math.random() * 0.8;
 
     return { color, size, endX, endY, duration, delay };
   }, [index]);
 
   return (
-    <motion.div
-      initial={{ x: 0, y: 0, opacity: 0, scale: 0.4 }}
-      animate={{ 
-        x: data.endX, 
-        y: data.endY, 
-        opacity: [0, 1, 0],
-        scale: [0.4, 1.4, 0.2] 
-      }}
-      transition={{ 
-        duration: data.duration, 
-        delay: data.delay, 
-        ease: "easeOut"
-      }}
+    <div
       style={{
         position: 'absolute',
         top: '50%',
@@ -84,8 +65,12 @@ const BurstGrain = React.memo(({ index }) => {
         borderRadius: '50%',
         zIndex: 150,
         pointerEvents: 'none',
-        willChange: 'transform, opacity',
-        backfaceVisibility: 'hidden'
+        opacity: 0,
+        transform: 'translate(-50%, -50%) scale(0.4)',
+        animation: `burstOut ${data.duration}s ease-out ${data.delay}s forwards`,
+        '--end-x': `${data.endX}px`,
+        '--end-y': `${data.endY}px`,
+        willChange: 'transform, opacity'
       }}
     />
   );
@@ -133,7 +118,7 @@ const OpeningAnimation = ({ onComplete }) => {
             left: 0,
             width: '100vw',
             height: '100vh',
-            backgroundColor: '#1a140d', // Desert background
+            backgroundColor: '#1a140d', 
             zIndex: 10000,
             display: 'flex',
             justifyContent: 'center',
@@ -141,6 +126,18 @@ const OpeningAnimation = ({ onComplete }) => {
             overflow: 'hidden',
           }}
         >
+          <style>{`
+            @keyframes ambientDrift {
+              0% { transform: translate(0, 0); opacity: 0; }
+              50% { opacity: 0.6; }
+              100% { transform: translate(var(--move-x), var(--move-y)); opacity: 0; }
+            }
+            @keyframes burstOut {
+              0% { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+              15% { opacity: 1; }
+              100% { transform: translate(calc(-50% + var(--end-x)), calc(-50% + var(--end-y))) scale(0.2); opacity: 0; }
+            }
+          `}</style>
           {/* Atmosphere Layer - Rich Sand Fog */}
           <div style={{
             position: 'absolute',

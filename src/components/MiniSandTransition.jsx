@@ -9,28 +9,20 @@ const Grain = React.memo(({ index }) => {
   const data = useMemo(() => {
     const colors = ['#C8A058', '#d2b48c', '#c2b280', '#8b7355', '#f5deb3'];
     const color = colors[index % colors.length];
-    const size = Math.random() * 3.5 + 1.2;
+    const size = Math.random() * 3.5 + 1.5;
     
     const startX = -20; 
     const endX = 120; 
     const startY = Math.random() * 100;
     const endY = startY + (Math.random() - 0.5) * 15;
     
-    const duration = 1.2 + Math.random() * 1.2; 
-    const delay = Math.random() * 0.6;
+    const duration = 1.0 + Math.random() * 1.0; 
+    const delay = Math.random() * 0.5;
     return { color, size, startX, endX, startY, endY, duration, delay };
   }, [index]);
 
   return (
-    <motion.div
-      initial={{ x: `${data.startX}vw`, y: `${data.startY}vh`, opacity: 0, scale: 0.8 }}
-      animate={{ 
-        x: `${data.endX}vw`, 
-        y: `${data.endY}vh`,
-        opacity: [0, 0.9, 0.9, 0],
-        scale: [0.8, 1.1, 1.1, 0.8]
-      }}
-      transition={{ duration: data.duration, delay: data.delay, ease: "linear" }}
+    <div
       style={{
         position: 'absolute',
         width: `${data.size}px`,
@@ -39,8 +31,14 @@ const Grain = React.memo(({ index }) => {
         borderRadius: '50%',
         filter: 'blur(0.8px)',
         zIndex: 999999,
-        willChange: 'transform, opacity',
-        backfaceVisibility: 'hidden'
+        left: `${data.startX}vw`,
+        top: `${data.startY}vh`,
+        opacity: 0,
+        transform: 'scale(0.8)',
+        animation: `grainSweep ${data.duration}s linear ${data.delay}s forwards`,
+        '--end-x': `${data.endX - data.startX}vw`,
+        '--end-y': `${data.endY - data.startY}vh`,
+        willChange: 'transform, opacity'
       }}
     />
   );
@@ -115,6 +113,13 @@ const MiniSandTransition = ({ children }) => {
              pointerEvents: 'none',
              overflow: 'hidden'
           }}>
+            <style>{`
+              @keyframes grainSweep {
+                0% { transform: scale(0.8); opacity: 0; }
+                10%, 90% { opacity: 0.9; }
+                100% { transform: translate(var(--end-x), var(--end-y)) scale(1.1); opacity: 0; }
+              }
+            `}</style>
             <div style={{ position: 'relative', width: '100%', height: '100%', contain: 'strict' }}>
               {grains.map((_, i) => (
                 <Grain key={i} index={i} />
