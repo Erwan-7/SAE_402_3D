@@ -1,17 +1,16 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const AmbientGrain = ({ index }) => {
-  // Constant drifting sand grains - Balanced for visibility vs performance
+const AmbientGrain = React.memo(({ index }) => {
   const data = useMemo(() => {
     const colors = ['#C8A058', '#d2b48c', '#c2b280', '#8b7355', '#f5deb3'];
     const color = colors[index % colors.length];
-    const size = Math.random() * 2.5 + 0.8; // Slightly larger for visibility
+    const size = Math.random() * 2.5 + 1.0;
     const startX = Math.random() * 100;
     const startY = Math.random() * 100;
-    const moveX = (Math.random() - 0.5) * 40;
-    const moveY = (Math.random() - 0.5) * 40;
-    const duration = Math.random() * 5 + 4;
+    const moveX = (Math.random() - 0.5) * 30;
+    const moveY = (Math.random() - 0.5) * 30;
+    const duration = Math.random() * 5 + 5;
     const delay = Math.random() * -10;
 
     return { color, size, startX, startY, moveX, moveY, duration, delay };
@@ -23,7 +22,7 @@ const AmbientGrain = ({ index }) => {
       animate={{ 
         x: `${data.startX + data.moveX}vw`,
         y: `${data.startY + data.moveY}vh`,
-        opacity: [0, 0.7, 0] 
+        opacity: [0, 0.6, 0] 
       }}
       transition={{ 
         duration: data.duration, 
@@ -39,41 +38,41 @@ const AmbientGrain = ({ index }) => {
         borderRadius: '50%',
         zIndex: 1,
         pointerEvents: 'none',
-        willChange: 'transform, opacity'
+        willChange: 'transform, opacity',
+        backfaceVisibility: 'hidden'
       }}
     />
   );
-};
+});
 
-const BurstGrain = ({ index }) => {
-  // Explosion of sand - Increased count from previous optimized version
+const BurstGrain = React.memo(({ index }) => {
   const data = useMemo(() => {
     const colors = ['#C8A058', '#d2b48c', '#c2b280', '#8b7355'];
     const color = colors[index % colors.length];
-    const size = Math.random() * 3 + 1;
+    const size = Math.random() * 3.5 + 1.2;
     const angle = Math.random() * Math.PI * 2;
-    const velocity = 250 + Math.random() * 500;
+    const velocity = 200 + Math.random() * 450;
     const endX = Math.cos(angle) * velocity;
     const endY = Math.sin(angle) * velocity;
-    const duration = 2 + Math.random() * 2;
-    const delay = 1.9 + Math.random() * 1.5;
+    const duration = 2.5 + Math.random() * 1.5;
+    const delay = 2.0 + Math.random() * 1.0;
 
     return { color, size, endX, endY, duration, delay };
   }, [index]);
 
   return (
     <motion.div
-      initial={{ x: 0, y: 0, opacity: 0, scale: 0.3 }}
+      initial={{ x: 0, y: 0, opacity: 0, scale: 0.4 }}
       animate={{ 
         x: data.endX, 
         y: data.endY, 
-        opacity: [0, 0.9, 0],
-        scale: [0.3, 1.2, 0.2] 
+        opacity: [0, 1, 0],
+        scale: [0.4, 1.4, 0.2] 
       }}
       transition={{ 
         duration: data.duration, 
         delay: data.delay, 
-        ease: [0.25, 0.1, 0.25, 1] // Smooth easeOut
+        ease: "easeOut"
       }}
       style={{
         position: 'absolute',
@@ -85,18 +84,20 @@ const BurstGrain = ({ index }) => {
         borderRadius: '50%',
         zIndex: 150,
         pointerEvents: 'none',
-        willChange: 'transform, opacity'
+        willChange: 'transform, opacity',
+        backfaceVisibility: 'hidden'
       }}
     />
   );
-};
+});
 
 const OpeningAnimation = ({ onComplete }) => {
   const [isVisible, setIsVisible] = useState(true);
 
-  // INCREASED PARTICLE COUNT: 800 ambient + 800 burst = 1600 total (Balanced)
-  const ambientGrains = useMemo(() => [...Array(800)], []);
-  const burstGrains = useMemo(() => [...Array(800)], []);
+  // Optimized particle counts: 400 ambient + 400 burst = 800 total
+  // Reduced from 1600 to significantly boost performance on mobile
+  const ambientGrains = useMemo(() => [...Array(400)], []);
+  const burstGrains = useMemo(() => [...Array(400)], []);
 
   useEffect(() => {
     const originalBg = document.body.style.backgroundColor;
@@ -163,8 +164,8 @@ const OpeningAnimation = ({ onComplete }) => {
           {/* THE PYRAMID - Proportional and Majestic */}
           <div style={{ 
             position: 'relative', 
-            width: '380px', 
-            height: '350px', 
+            width: 'clamp(280px, 80vw, 380px)', 
+            height: 'clamp(260px, 75vw, 350px)', 
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -233,13 +234,13 @@ const OpeningAnimation = ({ onComplete }) => {
               transition={{ duration: 5.5, times: [0, 0.2, 0.8, 1], delay: 0.8 }}
               style={{
                 position: 'absolute',
-                bottom: '-30%',
+                bottom: '-25%',
                 width: '100%',
                 textAlign: 'center',
                 color: '#C8A058',
                 fontFamily: 'serif',
-                fontSize: '1.6rem',
-                letterSpacing: '12px',
+                fontSize: 'clamp(0.9rem, 4.5vw, 1.6rem)',
+                letterSpacing: 'clamp(4px, 2.5vw, 12px)',
                 textTransform: 'uppercase',
                 fontWeight: 'bold',
                 textShadow: '0 0 20px rgba(200, 160, 88, 0.8)',

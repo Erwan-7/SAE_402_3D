@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState, Suspense, useLayoutEffect } from "react";
+import React, { useRef, useMemo, useState, Suspense, useLayoutEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Html, Text, useTexture, Billboard } from "@react-three/drei";
 import { useNavigate } from "react-router-dom";
@@ -20,20 +20,20 @@ function latLonToVector3(lat, lon, radius = 10) {
 // --- COMPONENTS ---
 
 // 1. GLOBE
-function Globe() {
+const Globe = React.memo(() => {
     const colorMap = useTexture("https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg");
 
     return (
         <group>
-            {/* Main Earth Sphere */}
+            {/* Main Earth Sphere - Optimized segments 48x48 */}
             <mesh position={[0, 0, 0]}>
-                <sphereGeometry args={[10, 64, 64]} />
+                <sphereGeometry args={[10, 48, 48]} />
                 <meshStandardMaterial map={colorMap} roughness={0.7} metalness={0.1} />
             </mesh>
 
-            {/* Atmosphere soft glow to blend with background easily */}
+            {/* Atmosphere soft glow - Optimized segments 32x32 */}
             <mesh position={[0, 0, 0]}>
-                <sphereGeometry args={[10.3, 64, 64]} />
+                <sphereGeometry args={[10.3, 32, 32]} />
                 <meshStandardMaterial
                     color="#4aa6ff"
                     transparent
@@ -44,13 +44,12 @@ function Globe() {
             </mesh>
         </group>
     );
-}
+});
 
 // 2. MARKER (3D Pyramide)
-function EgyptMarker({ lat, lon, onZoomStart }) {
+const EgyptMarker = React.memo(({ lat, lon, onZoomStart }) => {
     const navigate = useNavigate();
     const [hovered, setHovered] = useState(false);
-    // Position it clearly above the surface (radius 10.45) so the base doesn't clip the globe
     const position = useMemo(() => latLonToVector3(lat, lon, 10.45), [lat, lon]);
     const groupRef = useRef();
     const meshRef = useRef();
@@ -60,28 +59,22 @@ function EgyptMarker({ lat, lon, onZoomStart }) {
     useLayoutEffect(() => {
         if (groupRef.current) {
             const [x, y, z] = position;
-            // Point outward from the center
             groupRef.current.lookAt(x * 2, y * 2, z * 2);
         }
     }, [position]);
 
-    // Animate the pyramid and zoom effect
     useFrame((state, delta) => {
         if (meshRef.current) {
-            // Spin slowly around the outward-pointing local Z axis
             meshRef.current.rotation.z = state.clock.elapsedTime * 0.3;
-            // Very subtle bobbing
             meshRef.current.position.z = Math.sin(state.clock.elapsedTime * 2) * 0.05;
         }
 
         if (isZooming) {
-            // Smoothly move the camera closer to the marker
-            const factor = 13.5 / 10.45; // target radius 13.5
+            const factor = 13.5 / 10.45; 
             const targetCamPos = { x: position[0] * factor, y: position[1] * factor, z: position[2] * factor };
             camera.position.lerp(targetCamPos, delta * 3.5);
-            camera.lookAt(0, 0, 0); // keep looking at globe center
+            camera.lookAt(0, 0, 0); 
             
-            // Shrink the marker proportionally as the camera zooms in
             const currentScale = meshRef.current.scale.x;
             const newScale = currentScale + (0.15 - currentScale) * delta * 3.5;
             meshRef.current.scale.set(newScale, newScale, newScale);
@@ -95,7 +88,6 @@ function EgyptMarker({ lat, lon, onZoomStart }) {
         setHovered(false);
         document.body.style.cursor = 'default';
         
-        // Wait for zoom animation to finish before navigating
         setTimeout(() => {
             navigate('/egypt');
         }, 1200);
@@ -104,15 +96,13 @@ function EgyptMarker({ lat, lon, onZoomStart }) {
     return (
         <group position={position} ref={groupRef}>
             <group ref={meshRef}>
-                {/* The 3D Pyramid */}
                 <mesh
-                    rotation={[Math.PI / 2, 0, 0]} // Make the pyramid point outward
-                    scale={[1.2, 1.2, 1.2]} // 20% larger
+                    rotation={[Math.PI / 2, 0, 0]} 
+                    scale={[1.2, 1.2, 1.2]} 
                     onClick={handleClick}
                     onPointerOver={(e) => { if(!isZooming) { e.stopPropagation(); document.body.style.cursor = 'pointer'; setHovered(true); } }}
                     onPointerOut={(e) => { if(!isZooming) { e.stopPropagation(); document.body.style.cursor = 'default'; setHovered(false); } }}
                 >
-                    {/* A 4-sided cone creates a perfect square base pyramid */}
                     <coneGeometry args={[0.3, 0.55, 4]} />
                     <meshStandardMaterial
                         color="#D4AF37"
@@ -120,12 +110,11 @@ function EgyptMarker({ lat, lon, onZoomStart }) {
                         emissiveIntensity={hovered ? 0.6 : 0.2}
                         metalness={0.9}
                         roughness={0.15}
-                        flatShading={true} // Crisp pyramid faces
+                        flatShading={true} 
                     />
                 </mesh>
             </group>
 
-            {/* Hover Tooltip (Rich HTML Card) */}
             {hovered && !isZooming && (
                 <Html position={[0, 1.5, 0]} center zIndexRange={[100, 0]}>
                     <div style={{
@@ -139,7 +128,8 @@ function EgyptMarker({ lat, lon, onZoomStart }) {
                         alignItems: 'center',
                         boxShadow: '0 15px 30px rgba(0,0,0,0.4)',
                         animation: 'popUp 0.3s ease-out forwards',
-                        pointerEvents: 'none'
+                        pointerEvents: 'none',
+                        transform: 'translateZ(0)'
                     }}>
                         <style>{`
                             @keyframes popUp {
@@ -165,15 +155,13 @@ function EgyptMarker({ lat, lon, onZoomStart }) {
             )}
         </group>
     );
-}
+});
 
 // 3. TEXT LABELS (Smaller & Cleaner)
-function CountryLabel({ text, lat, lon, isSea = false }) {
+const CountryLabel = React.memo(({ text, lat, lon, isSea = false }) => {
     const position = useMemo(() => latLonToVector3(lat, lon, 10.02), [lat, lon]);
     const ref = useRef();
 
-    // Pointe le texte vers l'extérieur du globe (au lieu du centre)
-    // pour que le texte soit à l'endroit vu de l'extérieur.
     useLayoutEffect(() => {
         if (ref.current) {
             const [x, y, z] = position;
@@ -196,12 +184,16 @@ function CountryLabel({ text, lat, lon, isSea = false }) {
             </Text>
         </group>
     );
-}
+});
 
 // --- MAIN SCENE ---
 export default function WorldMap3D() {
     const [camX, camY, camZ] = latLonToVector3(26.8, 30.8, 25); // Initial point toward Egypt
     const [isGlobalZooming, setIsGlobalZooming] = useState(false);
+    
+    // Responsive FOV logic
+    const isMobile = window.innerWidth <= 768;
+    const fov = isMobile ? 50 : 35; // Wider FOV for mobile to see more of the globe
 
     return (
         <div style={{
@@ -209,7 +201,7 @@ export default function WorldMap3D() {
             height: "100%",
             background: "transparent"
         }}>
-            <Canvas shadows dpr={[1, 2]} camera={{ position: [camX, camY, camZ], fov: 35 }}>
+            <Canvas shadows dpr={[1, 2]} camera={{ position: [camX, camY, camZ], fov }}>
 
                 {/* Lighting setup: high ambient light removes the dark shadow side of the globe */}
                 <ambientLight intensity={1.8} />

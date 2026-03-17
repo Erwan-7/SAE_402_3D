@@ -87,63 +87,66 @@ export default function Landing() {
           alignItems: 'center',
           color: 'var(--color-black)',
           textAlign: 'center',
-          padding: '0 2rem',
+          padding: '0 1rem',
+          width: '100%',
           maxWidth: '1200px',
-          marginTop: '-12vh'
+          marginTop: 'clamp(-5vh, -2vh, 0vh)'
         }}>
           <img src={logo} alt="Logo" style={{ 
-              height: '60vh', 
-              maxWidth: '90vw', 
+              height: 'min(50vh, 400px)', 
+              maxWidth: '85vw', 
               objectFit: 'contain', 
-              marginBottom: '-15vh', /* Annule l'énorme marge interne invisible proportionnellement */
+              marginBottom: '-8vh',
               filter: logoFilter, 
               transition: 'filter 0.3s ease' 
           }} />
           
           <h2 style={{ 
-            fontSize: 'clamp(1.3rem, 3vh, 1.8rem)', 
-            margin: '0 0 1.5vh 0', 
+            fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', 
+            margin: '0 0 1vh 0', 
             fontFamily: 'var(--font-title)', 
             color: 'var(--color-gray)',
             textTransform: 'uppercase',
-            letterSpacing: '5px'
+            letterSpacing: 'clamp(2px, 1vw, 5px)'
           }}>
             Le Seigneur de Vie
           </h2>
           
           <h1 style={{ 
-            fontSize: 'clamp(2.7rem, 6.5vh, 6rem)', 
-            margin: '0 0 3vh 0', 
+            fontSize: 'clamp(1.8rem, 5.5vw, 5rem)', 
+            margin: '0 0 2vh 0', 
             fontFamily: '"Times New Roman", Times, Georgia, serif', 
-            color: 'var(--color-gold)'
+            color: 'var(--color-gold)',
+            lineHeight: 1.1
           }}>
             Bienvenue dans l'Antiquité
           </h1>
           
           <p style={{ 
-            fontSize: 'clamp(1.2rem, 2.5vh, 1.8rem)', 
+            fontSize: 'clamp(0.95rem, 2vw, 1.4rem)', 
             lineHeight: '1.4', 
-            margin: '0 0 4.5vh 0',
-            fontFamily: 'var(--font-title)'
+            margin: '0 0 4vh 0',
+            fontFamily: 'var(--font-title)',
+            padding: '0 5%'
           }}>
-            Embarquez pour une expédition virtuelle inédite à travers les millénaires.<br />
-            Venez découvrir les divinités secrètes des pharaons, la richesse d'une culture intemporelle,<br />
-            et la force créatrice du Seigneur de Vie, dissimulée dans chaque hiéroglyphe de notre histoire.
+            Embarquez pour une expédition virtuelle inédite à travers les millénaires.<br className="hidden-mobile" />
+            Venez découvrir les divinités secrètes des pharaons, la richesse d'une culture intemporelle,<br className="hidden-mobile" />
+            et la force créatrice du Seigneur de Vie.
           </p>
           
           <Link 
             to="/map" 
             style={{
-              padding: '2vh 5.5vh',
+              padding: '1.5vh 4vh',
               backgroundColor: 'var(--color-gold)',
               color: '#FFFFFF',
               textDecoration: 'none',
-              fontSize: 'clamp(1.3rem, 2.2vh, 1.6rem)',
+              fontSize: 'clamp(1rem, 2vh, 1.4rem)',
               fontFamily: '"Times New Roman", Times, Georgia, serif',
               fontWeight: 'bold',
               borderRadius: '5px',
               textTransform: 'uppercase',
-              letterSpacing: '2px',
+              letterSpacing: '1px',
               transition: 'all 0.3s ease',
               boxShadow: '0 4px 15px rgba(200, 160, 88, 0.4)'
             }}

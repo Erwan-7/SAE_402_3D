@@ -50,12 +50,28 @@ export default function Home() {
       style={{ willChange: "opacity" }}
       className="layout-container"
     >
-      <header>
+      <header style={{ 
+        padding: '0 min(4rem, 5vw)',
+        justifyContent: 'center' // Center content on mobile
+      }}>
         <HeaderMotifs />
-        <Link to="/" style={{ zIndex: 20, position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: '4rem' }}>
+        <Link to="/" style={{ 
+          zIndex: 2000, 
+          position: 'absolute', 
+          top: '50%', 
+          transform: 'translateY(-50%)', 
+          left: 'clamp(1rem, 5vw, 4rem)' 
+        }}>
           <img src={logo} alt="Notre Logo" className="logo-main" style={{ filter: logoFilter, transition: 'filter 0.3s ease' }} />
         </Link>
-        <h1 style={{ margin: 0, zIndex: 1, position: 'relative' }}>LE SEIGNEUR DE VIE</h1>
+        <h1 style={{ 
+          margin: 0, 
+          zIndex: 1, 
+          position: 'relative',
+          fontSize: 'clamp(0.8rem, 4.5vw, 1.5rem)',
+          textAlign: 'right',
+          width: '100%'
+        }}>LE SEIGNEUR DE VIE</h1>
       </header>
 
       <main style={{ position: 'relative' }}>

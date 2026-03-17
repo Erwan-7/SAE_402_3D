@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 // Global variable to track the initial entry point of the site
 let isAppInitialLoad = true;
 
-const Grain = ({ index }) => {
+const Grain = React.memo(({ index }) => {
   const data = useMemo(() => {
     const colors = ['#C8A058', '#d2b48c', '#c2b280', '#8b7355', '#f5deb3'];
     const color = colors[index % colors.length];
@@ -39,11 +39,12 @@ const Grain = ({ index }) => {
         borderRadius: '50%',
         filter: 'blur(0.8px)',
         zIndex: 999999,
-        willChange: 'transform, opacity'
+        willChange: 'transform, opacity',
+        backfaceVisibility: 'hidden'
       }}
     />
   );
-};
+});
 
 const MiniSandTransition = ({ children }) => {
   const location = useLocation();
@@ -71,7 +72,8 @@ const MiniSandTransition = ({ children }) => {
     }
   }, [isAnimating]);
 
-  const grains = useMemo(() => [...Array(350)], []); 
+  // Optimized grain count: 150 particles for smooth transitions
+  const grains = useMemo(() => [...Array(150)], []); 
 
   const contentVariants = {
     initial: { opacity: 0 },

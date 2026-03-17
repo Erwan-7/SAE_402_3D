@@ -42,12 +42,32 @@ export default function Egypt() {
       style={{ willChange: "opacity" }} 
       className="layout-container"
     >
-      <header style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000 }}>
+      <header style={{ 
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        right: 0, 
+        zIndex: 1000,
+        padding: '0 min(4rem, 5vw)'
+      }}>
         <HeaderMotifs />
-        <Link to="/" style={{ zIndex: 20, position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: '4rem' }}>
+        <Link to="/" style={{ 
+          zIndex: 2000, 
+          position: 'absolute', 
+          top: '50%', 
+          transform: 'translateY(-50%)', 
+          left: 'clamp(1rem, 5vw, 4rem)' 
+        }}>
           <img src={logo} alt="Notre Logo" className="logo-main" style={{ filter: logoFilter, transition: 'filter 0.3s ease' }} />
         </Link>
-        <h1 style={{ margin: 0, zIndex: 1, position: 'relative' }}>LE SEIGNEUR DE VIE</h1>
+        <h1 style={{ 
+          margin: 0, 
+          zIndex: 1, 
+          position: 'relative',
+          fontSize: 'clamp(0.8rem, 4.5vw, 1.5rem)',
+          textAlign: 'right',
+          width: '100%'
+        }}>LE SEIGNEUR DE VIE</h1>
       </header>
       
       <main style={{ 
@@ -82,9 +102,10 @@ export default function Egypt() {
             display: 'flex',
             alignItems: 'center',
             gap: '0.4rem',
-            fontSize: '0.85rem'
+            fontSize: 'clamp(0.75rem, 3.5vw, 0.9rem)',
+            margin: 0
           }}>
-            ← Retour à la carte
+            ← <span className="hidden-mobile">Retour à la </span>carte
           </Link>
 
           <button 
@@ -106,7 +127,7 @@ export default function Egypt() {
         <div className="article-wrapper" style={{ 
           maxWidth: '1200px', 
           margin: '0 auto', 
-          padding: '8rem 2rem 2rem 2rem', // Increased top padding to accommodate buttons
+          padding: 'clamp(5rem, 15vh, 8rem) 1.5rem 2rem 1.5rem', 
           position: 'relative',
           zIndex: 1,
           color: 'var(--color-black)',
@@ -136,12 +157,12 @@ export default function Egypt() {
 
           {/* 3D Frame - Reduced Height */}
           <div style={{ 
-            height: '450px', 
+            height: 'clamp(300px, 50vh, 450px)', 
             width: '100%', 
             backgroundColor: isDarkMode ? '#1a1814' : '#fdfaf5', 
-            margin: '5rem 0',
+            margin: 'clamp(2rem, 8vh, 5rem) 0',
             position: 'relative',
-            border: '20px solid var(--color-gold)',
+            border: 'clamp(8px, 2vw, 20px) solid var(--color-gold)',
             borderImage: 'linear-gradient(45deg, #C8A058, #F3E5AB, #D4AF37, #C8A058) 1',
             boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
             overflow: 'hidden'
