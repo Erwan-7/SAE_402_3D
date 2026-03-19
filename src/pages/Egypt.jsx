@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stage } from "@react-three/drei";
 import { Link } from "react-router-dom";
@@ -14,12 +14,33 @@ export default function Egypt() {
     const saved = localStorage.getItem('theme');
     return saved === 'light' ? false : true;
   });
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const containerRef = useRef(null);
 
   const toggleTheme = () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
     localStorage.setItem('theme', newMode ? 'dark' : 'light');
   };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -30,8 +51,8 @@ export default function Egypt() {
   }, [isDarkMode]);
 
   const logoFilter = isDarkMode 
-    ? 'drop-shadow(0px 0px 5px rgba(212,175,55,0.3))' 
-    : 'brightness(0.6) contrast(1.5) drop-shadow(0px 0px 1.5px rgba(0,0,0,0.8))';
+    ? 'drop-shadow(0px 0px 8px rgba(212,175,55,0.5)) contrast(1.1)' 
+    : 'brightness(0.6) contrast(1.5) drop-shadow(0px 0px 2.5px rgba(0,0,0,0.6))';
 
   return (
     <motion.div 
@@ -56,9 +77,43 @@ export default function Egypt() {
           position: 'absolute', 
           top: '50%', 
           transform: 'translateY(-50%)', 
-          left: 'clamp(1rem, 5vw, 4rem)' 
+          left: 'clamp(0.5rem, 3.5vw, 4rem)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}>
-          <img src={logo} alt="Notre Logo" className="logo-main" style={{ filter: logoFilter, transition: 'filter 0.3s ease' }} />
+          <div style={{
+             position: 'relative',
+             padding: '8px',
+             borderRadius: '50%',
+             background: isDarkMode 
+               ? 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 75%)' 
+               : 'radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, transparent 75%)',
+             display: 'flex',
+             alignItems: 'center',
+             justifyContent: 'center',
+             transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.1)';
+            e.currentTarget.style.background = isDarkMode 
+              ? 'radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, transparent 75%)' 
+              : 'radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, transparent 75%)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.background = isDarkMode 
+              ? 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 75%)' 
+              : 'radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, transparent 75%)';
+          }}
+          >
+            <img src={logo} alt="Notre Logo" className="logo-main" style={{ 
+              filter: logoFilter, 
+              transition: 'all 0.4s ease',
+              position: 'relative',
+              zIndex: 2
+            }} />
+          </div>
         </Link>
         <h1 className="header-title" style={{ 
           margin: 0, 
@@ -151,17 +206,65 @@ export default function Egypt() {
           </div>
 
           {/* 3D Frame - Reduced Height */}
-          <div style={{ 
-            height: 'clamp(300px, 50vh, 450px)', 
+          <div 
+            ref={containerRef}
+            style={{ 
+            height: isFullscreen ? '100vh' : 'clamp(300px, 50vh, 450px)', 
             width: '100%', 
             backgroundColor: isDarkMode ? '#1a1814' : '#fdfaf5', 
-            margin: 'clamp(2rem, 8vh, 5rem) 0',
+            margin: isFullscreen ? '0' : 'clamp(2rem, 8vh, 5rem) 0',
             position: 'relative',
-            border: 'clamp(8px, 2vw, 20px) solid var(--color-gold)',
-            borderImage: 'linear-gradient(45deg, #C8A058, #F3E5AB, #D4AF37, #C8A058) 1',
-            boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
-            overflow: 'hidden'
+            border: isFullscreen ? 'none' : 'clamp(8px, 2vw, 20px) solid var(--color-gold)',
+            borderImage: isFullscreen ? 'none' : 'linear-gradient(45deg, #C8A058, #F3E5AB, #D4AF37, #C8A058) 1',
+            boxShadow: isFullscreen ? 'none' : '0 30px 60px rgba(0,0,0,0.5)',
+            overflow: 'hidden',
+            transition: 'all 0.3s ease'
           }}>
+            {/* Fullscreen Button */}
+            <button
+              onClick={toggleFullscreen}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: isFullscreen ? '30px' : '20px',
+                transform: 'translateY(-50%)',
+                zIndex: 100,
+                background: 'rgba(200, 160, 88, 0.15)',
+                backdropFilter: 'blur(8px)',
+                border: '1.5px solid var(--color-gold)',
+                borderRadius: '50%',
+                width: '45px',
+                height: '45px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: 'var(--color-gold)',
+                fontSize: '1.2rem',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                outline: 'none'
+              }}
+              title={isFullscreen ? "Quitter le plein écran" : "Plein écran"}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-50%) scale(1.1) rotate(5deg)';
+                e.currentTarget.style.background = 'rgba(200, 160, 88, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(-50%) scale(1) rotate(0deg)';
+                e.currentTarget.style.background = 'rgba(200, 160, 88, 0.15)';
+              }}
+            >
+              {isFullscreen ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                </svg>
+              )}
+            </button>
             {/* Corner Motifs */}
             <div style={{ position: 'absolute', top: '15px', left: '15px', color: 'var(--color-gold)', fontSize: '2rem', zIndex: 2 }}>𓂀</div>
             <div style={{ position: 'absolute', top: '15px', right: '15px', color: 'var(--color-gold)', fontSize: '2rem', zIndex: 2 }}>𓂀</div>
@@ -197,12 +300,36 @@ export default function Egypt() {
               </div>
           </div>
 
+          <h2 style={{ 
+            fontSize: 'clamp(1.3rem, 4vw, 2.2rem)', 
+            color: 'var(--color-gold)', 
+            margin: '4rem 0 2rem 0',
+            fontFamily: '"Times New Roman", Times, Georgia, serif',
+            borderBottom: '1px solid rgba(200, 160, 88, 0.3)',
+            paddingBottom: '1rem',
+            textAlign: 'left'
+          }}>
+            L'artisanat égyptien : de la pierre brute à la silhouette humaine.
+          </h2>
+
           <div className="responsive-flex" style={{ flexWrap: 'wrap-reverse' }}>
             <img src={art2} alt="Papyrus égyptien" loading="lazy" decoding="async" style={{ width: 'min(350px, 100%)', height: 'auto', maxWidth: '100%', objectFit: 'cover', borderRadius: '8px', boxShadow: '0 15px 35px rgba(0,0,0,0.25)', transform: 'rotate(-1.5deg)' }} />
             <p style={{ flex: '1', minWidth: 'min(350px, 100%)', fontSize: 'clamp(1rem, 2.5vw, 1.3rem)', lineHeight: '2' }}>
               En fonction du statut social du défunt, le sarcophage pouvait être fabriqué en utilisant du bois précieux, surtout le cèdre du Liban, et de la pierre massive dans laquelle on retrouve du basalte, du granit rose et du calcaire. Pour les modèles anthropoïdes, les ouvriers donnaient un aspect approximatif avant de sculpter en habillant la silhouette humaine. Ensuite, la surface était enduite avec du sable fin puis, grâce aux pigments naturels comme le bleu de lapis-lazuli, le jaune d’or et le vert de malachite, souvent fixés par de la cire d'abeille ou de la résine pour garantir leur éclat éternel.
             </p>
           </div>
+
+          <h2 style={{ 
+            fontSize: 'clamp(1.3rem, 4vw, 2.2rem)', 
+            color: 'var(--color-gold)', 
+            margin: '4rem 0 2rem 0',
+            fontFamily: '"Times New Roman", Times, Georgia, serif',
+            borderBottom: '1px solid rgba(200, 160, 88, 0.3)',
+            paddingBottom: '1rem',
+            textAlign: 'left'
+          }}>
+            Symbolisme et protection : le dialogue des dieux et des hommes.
+          </h2>
 
           <div style={{ 
             padding: 'clamp(1.5rem, 5vw, 4rem)', 

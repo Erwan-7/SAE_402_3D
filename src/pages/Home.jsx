@@ -38,8 +38,8 @@ export default function Home() {
 
   // Si on est en mode sombre, on supprime l'assombrissement du logo pour qu'il soit bien visible
   const logoFilter = isDarkMode 
-    ? 'drop-shadow(0px 0px 5px rgba(212,175,55,0.3))' 
-    : 'brightness(0.6) contrast(1.5) drop-shadow(0px 0px 1.5px rgba(0,0,0,0.8))';
+    ? 'drop-shadow(0px 0px 8px rgba(212,175,55,0.5)) contrast(1.1)' 
+    : 'brightness(0.6) contrast(1.5) drop-shadow(0px 0px 2.5px rgba(0,0,0,0.6))';
 
   return (
     <motion.div 
@@ -60,9 +60,43 @@ export default function Home() {
           position: 'absolute', 
           top: '50%', 
           transform: 'translateY(-50%)', 
-          left: 'clamp(1rem, 5vw, 4rem)' 
+          left: 'clamp(0.5rem, 3.5vw, 4rem)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}>
-          <img src={logo} alt="Notre Logo" decoding="async" className="logo-main" style={{ filter: logoFilter, transition: 'filter 0.3s ease' }} />
+          <div style={{
+             position: 'relative',
+             padding: '8px',
+             borderRadius: '50%',
+             background: isDarkMode 
+               ? 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 75%)' 
+               : 'radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, transparent 75%)',
+             display: 'flex',
+             alignItems: 'center',
+             justifyContent: 'center',
+             transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.1)';
+            e.currentTarget.style.background = isDarkMode 
+              ? 'radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, transparent 75%)' 
+              : 'radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, transparent 75%)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.background = isDarkMode 
+              ? 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 75%)' 
+              : 'radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, transparent 75%)';
+          }}
+          >
+            <img src={logo} alt="Notre Logo" decoding="async" className="logo-main" style={{ 
+              filter: logoFilter, 
+              transition: 'all 0.4s ease',
+              position: 'relative',
+              zIndex: 2
+            }} />
+          </div>
         </Link>
         <h1 style={{ 
           margin: 0, 

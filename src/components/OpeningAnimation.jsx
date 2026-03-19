@@ -76,7 +76,7 @@ const BurstGrain = React.memo(({ index }) => {
   );
 });
 
-const OpeningAnimation = ({ onComplete }) => {
+const OpeningAnimation = ({ onComplete, onInteraction, isAudioPlaying }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   // Optimized particle counts: 400 ambient + 400 burst = 800 total
@@ -96,7 +96,7 @@ const OpeningAnimation = ({ onComplete }) => {
       if (onComplete) onComplete();
       document.body.style.backgroundColor = originalBg;
       document.body.style.overflow = originalOverflow;
-    }, 6000);
+    }, 4500); // Reduced from 6000ms for faster flow
 
     return () => {
       clearTimeout(timer);
@@ -112,6 +112,7 @@ const OpeningAnimation = ({ onComplete }) => {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.2 }}
+          onClick={onInteraction}
           style={{
             position: 'fixed',
             top: 0,
@@ -247,6 +248,34 @@ const OpeningAnimation = ({ onComplete }) => {
               L'Héritage des Pharaons
             </motion.div>
           </div>
+
+          <AnimatePresence>
+            {!isAudioPlaying && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.5 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8 }}
+                style={{
+                  position: 'absolute',
+                  bottom: '3rem',
+                  color: 'var(--color-gold)',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  zIndex: 10002,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  letterSpacing: '2px',
+                  fontStyle: 'italic',
+                  userSelect: 'none'
+                }}
+              >
+                <span>𓂀 Cliquer n'importe où pour lancer l'ambiance 𓂀</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       )}
     </AnimatePresence>
