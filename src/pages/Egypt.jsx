@@ -211,7 +211,7 @@ export default function Egypt() {
             style={{ 
             height: isFullscreen ? '100vh' : 'clamp(300px, 50vh, 450px)', 
             width: '100%', 
-            backgroundColor: isDarkMode ? '#1a1814' : '#fdfaf5', 
+            backgroundColor: 'transparent', 
             margin: isFullscreen ? '0' : 'clamp(2rem, 8vh, 5rem) 0',
             position: 'relative',
             border: isFullscreen ? 'none' : 'clamp(8px, 2vw, 20px) solid var(--color-gold)',
@@ -271,7 +271,8 @@ export default function Egypt() {
             <div style={{ position: 'absolute', bottom: '15px', left: '15px', color: 'var(--color-gold)', fontSize: '2rem', zIndex: 2 }}>𓆗</div>
             <div style={{ position: 'absolute', bottom: '15px', right: '15px', color: 'var(--color-gold)', fontSize: '2rem', zIndex: 2 }}>𓆗</div>
 
-             <Canvas 
+              <Canvas 
+                style={{ touchAction: 'none' }}
                 dpr={[1, 1.5]} 
                 gl={{ powerPreference: "high-performance", antialias: true }} 
                 camera={{ position: [0, 0, 5], fov: 35 }}
@@ -281,7 +282,17 @@ export default function Egypt() {
                     <Model3D />
                   </Stage>
                 </Suspense>
-                <OrbitControls autoRotate autoRotateSpeed={0.8} makeDefault enableZoom={true} />
+                <OrbitControls 
+                  autoRotate 
+                  autoRotateSpeed={0.8} 
+                  makeDefault 
+                  enableZoom={true} 
+                  enablePan={true}
+                  enableRotate={true}
+                  enableDamping={true}
+                  dampingFactor={0.05}
+                  screenSpacePanning={true}
+                />
               </Canvas>
               
               <div className="hidden-mobile" style={{ 
@@ -298,7 +309,34 @@ export default function Egypt() {
               }}>
                 𓀀 𓀁 𓀂 𓀃 𓀄 𓀅 𓀆
               </div>
-          </div>
+
+              {/* Interaction Legend */}
+              <div style={{ 
+                position: 'absolute', 
+                bottom: '15px', 
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 10,
+                display: 'flex',
+                gap: 'clamp(0.5rem, 3vw, 2rem)',
+                color: 'var(--color-gold)',
+                fontFamily: '"Times New Roman", Times, Georgia, serif',
+                fontSize: 'clamp(0.6rem, 2vw, 0.75rem)',
+                textTransform: 'uppercase',
+                letterSpacing: '1.5px',
+                pointerEvents: 'none',
+                textShadow: isDarkMode ? '0 2px 4px rgba(0,0,0,0.8)' : '0 1px 2px rgba(255,255,255,0.5)',
+                opacity: 0.8,
+                whiteSpace: 'nowrap'
+              }}>
+                <span className="hidden-mobile">Clic Gauche : Rotation</span>
+                <span className="hidden-mobile">Clic Droit : Déplacement</span>
+                <span className="hidden-mobile">Molette : Zoom</span>
+                
+                <span className="only-mobile">1 Doigt : Rotation</span>
+                <span className="only-mobile">2 Doigts : Déplacement / Zoom</span>
+              </div>
+            </div>
 
           <h2 style={{ 
             fontSize: 'clamp(1.3rem, 4vw, 2.2rem)', 
