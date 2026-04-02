@@ -46,7 +46,7 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre système
 
 ### 2. Cloner le dépôt
 ```bash
-git clone [https://github.com/Erwan-7/sae_402_3d.git](https://github.com/Erwan-7/sae_402_3d.git)
+git clone [https://github.com/Erwan-7/SAE_402_3D.git](https://github.com/Erwan-7/SAE_402_3D.git)
 cd sae_402_3d
 ```
 
