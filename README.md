@@ -3,7 +3,7 @@
 Ce projet est une expérience immersive en 3D permettant d'explorer un sarcophage anthropomorphe et son environnement funéraire. Il a été réalisé dans le cadre d'un projet collaboratif alliant modélisation 3D sur Blender et développement web moderne avec React et Three.js.
 
 ## 🚀 Lien du site hébergé
-Retrouvez le projet en ligne ici : **[TON_LIEN_ICI]**
+Retrouvez le projet en ligne ici : **https://seigneur-de-vie.netlify.app/egypt**
 
 ---
 
@@ -46,5 +46,22 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre système
 
 ### 2. Cloner le dépôt
 ```bash
-git clone [https://github.com/votre-utilisateur/sae_402_3d.git](https://github.com/votre-utilisateur/sae_402_3d.git)
+git clone [https://github.com/Erwan-7-/sae_402_3d.git](https://github.com/Erwan-7-/sae_402_3d.git)
 cd sae_402_3d
+```
+
+### 3. Installer les dépendances
+```bash
+npm install
+```
+
+### 4. Lancer le projet
+```bash
+npm run dev
+```
+
+## 📂 Structure du Projet
+
+* /public : Contient le modèle 3D principal (Sarcophage.glb).
+* /src/components : Contient les composants React pour la scène 3D.
+* /src/pages : Les différentes vues de l'application (Accueil, Égypte).
