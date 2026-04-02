@@ -27,9 +27,9 @@ const Hotspot = ({ position, title, description }) => {
       >
         {/* Pulsing circle - Reduced to 20px and semi-transparent */}
         <div style={{
-          width: '20px',
-          height: '20px',
-          background: 'rgba(212, 175, 55, 0.5)', 
+          width: '14px',
+          height: '14px',
+          background: 'rgba(212, 175, 55, 0.3)', 
           borderRadius: '50%',
           border: '1.5px solid rgba(255, 255, 255, 0.8)',
           boxShadow: '0 0 8px rgba(212, 175, 55, 0.4)',
@@ -37,7 +37,7 @@ const Hotspot = ({ position, title, description }) => {
           alignItems: 'center',
           justifyContent: 'center',
           transition: 'all 0.3s ease',
-          transform: hovered ? 'scale(1.1)' : 'scale(1)',
+          transform: hovered ? 'scale(1.05)' : 'scale(1)',
           userSelect: 'none'
         }}>
           <div className="pulse" style={{
@@ -47,7 +47,7 @@ const Hotspot = ({ position, title, description }) => {
             borderRadius: '50%',
             border: '2px solid rgba(212, 175, 55, 0.4)',
             animation: 'pulse-animation 2s infinite',
-            opacity: 0.6
+            opacity: 0.4
           }} />
           <span style={{ color: 'white', fontWeight: 'bold', fontSize: '10px' }}>+</span>
         </div>

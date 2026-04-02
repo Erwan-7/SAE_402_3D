@@ -283,8 +283,6 @@ export default function Egypt() {
                   </Stage>
                 </Suspense>
                 <OrbitControls 
-                  autoRotate 
-                  autoRotateSpeed={0.8} 
                   makeDefault 
                   enableZoom={true} 
                   enablePan={true}
