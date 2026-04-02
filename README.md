@@ -3,7 +3,7 @@
 Ce projet est une expérience immersive en 3D permettant d'explorer un sarcophage anthropomorphe et son environnement funéraire. Il a été réalisé dans le cadre d'un projet collaboratif alliant modélisation 3D sur Blender et développement web moderne avec React et Three.js.
 
 ## 🚀 Lien du site hébergé
-Retrouvez le projet en ligne ici : **https://seigneur-de-vie.netlify.app/egypt**
+Retrouvez le projet en ligne ici : **https://seigneur-de-vie.netlify.app**
 
 ---
 
